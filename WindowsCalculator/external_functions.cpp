@@ -139,3 +139,4 @@ WCHAR OpenSSCFile(std::wstring& T1, std::wstring& T2, std::wstring& T3) {
 	}
 	return file_type;
 }
+

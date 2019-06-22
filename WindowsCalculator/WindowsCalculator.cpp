@@ -5,6 +5,7 @@
 #include "WindowsCalculator.h"
 #include "external_functions.hpp"
 
+
 #define MAX_LOADSTRING 100
 
 constexpr int BUTTON_WIDTH = 80;
@@ -41,7 +42,7 @@ WNDPROC EditProc3;
 
 HWND last_focus;
 
-// Forward declarations of functions included in this code module:
+
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
@@ -227,7 +228,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 		   hwndButton[index] = CreateWindowW (
 			   L"BUTTON",  // Predefined class; Unicode assumed 
 			   button_chars[index],      // Button text 
-			   WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+			   WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON ,  // Styles 
 			   OBJ_STARTING_X*(j+1) + BUTTON_WIDTH * j,         // x position 
 			   BTT_STARTING_Y - BTT_SPACING_Y*i - BUTTON_HEIGHT * i,         // y position 
 			   BUTTON_WIDTH,        // Button width
@@ -271,37 +272,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				return DefWindowProc(hWnd, message, wParam, lParam);
 			}
 
-			WCHAR* final_string = nullptr;
-			WCHAR *U_string = (WCHAR*)malloc(sizeof(WCHAR)*n_chars);
-			char *A_string = (char*)malloc(sizeof(char)*n_chars);
+			mpfr::mpreal result;
+
+			WCHAR* U_string = new WCHAR[n_chars];
+			char* A_string = new char[n_chars];
+
 			SendMessage(hwndTextBox, WM_GETTEXT, n_chars, (LPARAM)U_string);
 			wcstombs(A_string, U_string, n_chars);
-			free(U_string);
+			delete[] U_string;
 
 			int n_chars_2 = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
 
 			if (n_chars_2) {
-				WCHAR *U_string_2 = (WCHAR*)malloc(sizeof(WCHAR)*n_chars_2);
-				char *A_string_2 = (char*)malloc(sizeof(char)*n_chars_2);
+
+				WCHAR* U_string_2 = new WCHAR[n_chars_2];
+				char* A_string_2 = new char[n_chars_2];
+
 				SendMessage(hwndTextBox3, WM_GETTEXT, n_chars_2, (LPARAM)U_string_2);
 				wcstombs(A_string_2, U_string_2, n_chars_2);
-				free(U_string_2);
+				delete[] U_string_2;
 
-				mpfr::mpreal result = Evaluate<mpfr::mpreal>(A_string, A_string_2);
-				int result_string_size = strlen(result.toString().c_str());
-				result_string_size++;
-				final_string = (WCHAR*)malloc(sizeof(WCHAR)*result_string_size);
-				SecureZeroMemory(final_string, result_string_size * sizeof(WCHAR));
-				MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
+				result = Evaluate<mpfr::mpreal>(A_string, A_string_2);
+				delete[] A_string_2;
 			}
 			else {
-				mpfr::mpreal result = Evaluate<mpfr::mpreal>(A_string, NULL);
-				int result_string_size = strlen(result.toString().c_str());
-				result_string_size++;
-				final_string = (WCHAR*)malloc(sizeof(WCHAR)*result_string_size);
-				SecureZeroMemory(final_string, result_string_size * sizeof(WCHAR));
-				MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
+				result = Evaluate<mpfr::mpreal>(A_string, NULL);
 			}
+
+			delete[] A_string;
+			int result_string_size = strlen(result.toString().c_str()) + 1;
+			WCHAR* final_string = new WCHAR[result_string_size]();
+			MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
 
 			if (wcscmp(final_string,L"nan")) {
 			int str1_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
@@ -357,7 +358,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		}
 		else if (wmId == ID_BUTTON35) {
 			int n_chars = SendMessage(last_focus, WM_GETTEXTLENGTH, 0, 0);
-			SendMessage(last_focus, EM_SETSEL, n_chars - 1, n_chars);
+			SendMessage(last_focus, EM_SETSEL, (WPARAM)n_chars - 1, n_chars);
 			SendMessage(last_focus, EM_REPLACESEL, NULL, (LPARAM)L"");
 			SetFocus(last_focus);
 		}
@@ -458,7 +459,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-template <typename T> T Evaluate(char *expression_input, char* variable_values_input) {
+template <typename T> T Evaluate(char* expression_input, char* variable_values_input) {
 
 	typedef exprtk::symbol_table<T> symbol_table_t;
 	typedef exprtk::expression<T>     expression_t;
@@ -474,18 +475,18 @@ template <typename T> T Evaluate(char *expression_input, char* variable_values_i
 	std::vector <std::string> var_names;
 
 	if (variable_values_input != nullptr) {
-		char *variable_values = (char*)malloc(strlen(variable_values_input) + 1);
+		char* variable_values = char new[strlen(variable_values_input) + 1];
 		strcpy(variable_values, variable_values_input);
 
-		char *token;
-		char *var_name;
-		char *var_value;
+		char* token;
+		char* var_name;
+		char* var_value;
 
 		token = strtok(variable_values, "  ,");
 
 		while (token != NULL) {
-			char *token_copy = (char*)malloc(strlen(token) + 1);
-			char *dummy;
+			char* token_copy = new char[strlen(token) + 1];
+			char* dummy;
 			memset(token_copy, NULL, strlen(token + 1));
 			strcpy(token_copy, token);
 			var_name = strtok_s(token_copy, "=", &dummy);
@@ -494,10 +495,10 @@ template <typename T> T Evaluate(char *expression_input, char* variable_values_i
 			var_values.push_back(T(atof(var_value)));
 			var_names.push_back(var_name);
 
-			free(token_copy);
+			delete[] token_copy;
 			token = strtok(NULL, " ,");
 		}
-		free(variable_values);
+		delete[] variable_values;
 
 		int true_values_range = var_values.capacity();
 
