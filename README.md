@@ -16,3 +16,5 @@ This calculator uses the C++ Mathematical Expression Toolkit Library (ExprTk Lin
 
 The first distribution is available in the Release tab, be sure to check it out! 
 And if you wanna build QuickMath from scratch you need to include extrenal libraries (mpir,mpfr,exprtk,exprtk_mpfr_adaptor) with their relative linker (.h) and library (.lib) files. For legal reasons I don't want to include them in this repository.
+
+The test project is nothing important is only useful for me for testing out new features separately from the main program code
