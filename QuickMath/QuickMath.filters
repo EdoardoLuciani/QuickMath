@@ -24,9 +24,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsCalculator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="exprtk.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,15 +33,18 @@
     <ClInclude Include="external_functions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QuickMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WindowsCalculator.cpp">
+    <ClCompile Include="external_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external_functions.cpp">
+    <ClCompile Include="QuickMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

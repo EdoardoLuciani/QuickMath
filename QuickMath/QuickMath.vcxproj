@@ -22,8 +22,9 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{99AD5713-729F-416C-98E7-00DF72B8E600}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>WindowsCalculator</RootNamespace>
+    <RootNamespace>QuickMath</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>QuickMath</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -174,7 +175,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WindowsCalculator.h" />
+    <ClInclude Include="QuickMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external_functions.cpp" />
@@ -184,10 +185,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WindowsCalculator.cpp" />
+    <ClCompile Include="QuickMath.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="WindowsCalculator.rc" />
+    <ResourceCompile Include="QuickMath.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="main_icon.ico" />

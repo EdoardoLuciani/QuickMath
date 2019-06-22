@@ -159,25 +159,21 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>C:\Users\Edoardo\OneDrive\mpir\include;C:\Users\Edoardo\OneDrive\mpfr\include;C:\Users\Edoardo\OneDrive\mpreal\include;C:\Program Files\plplot\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Edoardo\OneDrive\mpir\include;C:\Users\Edoardo\OneDrive\mpfr\include;C:\Users\Edoardo\OneDrive\mpreal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;C:\Program Files\plplot\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mpir.lib;mpfr.lib;csirocsa.lib;plplot.lib;plplotcxx.lib;plplotqt.lib;plplottcltk.lib;plplottcltk_Main.lib;qsastime.lib;tclmatrix.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cxxplplot.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cxxplplot.h" />
-    <ClInclude Include="exprtk.hpp" />
-    <ClInclude Include="exprtk_mpfr_adaptor.hpp" />
     <ClInclude Include="plplot\include\dirent_msvc.h" />
     <ClInclude Include="plplot\include\disptab.h" />
     <ClInclude Include="plplot\include\drivers.h" />
@@ -202,9 +198,6 @@
     <ClInclude Include="plplot\include\plxwd.h" />
     <ClInclude Include="plplot\include\ps.h" />
     <ClInclude Include="plplot\include\qt.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="clipboard.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

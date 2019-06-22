@@ -18,17 +18,8 @@
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cxxplplot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="exprtk.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="exprtk_mpfr_adaptor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="plplot\include\dirent_msvc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -101,11 +92,5 @@
     <ClInclude Include="plplot\include\plstream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cxxplplot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="clipboard.txt" />
   </ItemGroup>
 </Project>

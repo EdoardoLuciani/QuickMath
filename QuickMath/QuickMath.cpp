@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "WindowsCalculator.h"
+#include "QuickMath.h"
 #include "external_functions.hpp"
 
 
@@ -475,7 +475,7 @@ template <typename T> T Evaluate(char* expression_input, char* variable_values_i
 	std::vector <std::string> var_names;
 
 	if (variable_values_input != nullptr) {
-		char* variable_values = char new[strlen(variable_values_input) + 1];
+		char* variable_values = new char[strlen(variable_values_input) + 1];
 		strcpy(variable_values, variable_values_input);
 
 		char* token;
