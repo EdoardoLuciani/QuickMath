@@ -86,7 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0) > 0)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (!TranslateAccelerator(hWnd, hAccelTable, &msg))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -97,21 +97,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 }
 
 LRESULT CALLBACK subParentProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
-	switch (uMsg)
-	{
+	
+	switch (uMsg) {
 	case WM_ACTIVATE:
 		SetFocus(last_focus);
 		break;
-
 	default:
 		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
 	}
 }
 
-LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (msg)
-	{
+LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	
+	switch (msg) {
 	case WM_CHAR:
 		switch (wParam) {
 		case VK_TAB:
@@ -354,10 +352,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 
 			SendMessage(hwndTextBox2, WM_SETTEXT, NULL, (LPARAM)final_string);
-			HWND current_focused_window = GetFocus();
-			if (current_focused_window == hwndButton[4]) {
-				SetFocus(last_focus);
-			}
+			delete[] final_string;
+
+			SetFocus(last_focus);
 		}
 		else if (wmId == ID_BUTTON31) {
 			//TODO: better UNDO function here
