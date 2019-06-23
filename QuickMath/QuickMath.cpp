@@ -5,7 +5,6 @@
 #include "QuickMath.h"
 #include "external_functions.hpp"
 
-
 #define MAX_LOADSTRING 100
 
 constexpr int BUTTON_WIDTH = 80;
@@ -37,6 +36,7 @@ HFONT hFontEdit = NULL;
 HFONT hFontEdit2 = NULL;
 HFONT hFontButton = NULL;
 
+WNDPROC ParentProc;
 WNDPROC EditProc;
 WNDPROC EditProc3;
 
@@ -54,7 +54,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_WINDOWSCALCULATOR, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_QUICKMATH, szWindowClass, MAX_LOADSTRING);
     
 	WNDCLASSEXW wcex;
 
@@ -65,12 +65,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSCALCULATOR));
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QUICKMATH));
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOWSCALCULATOR);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_QUICKMATH);
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSCALCULATOR));
+	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QUICKMATH));
 
 	RegisterClassExW(&wcex);
 
@@ -80,7 +80,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     }
 
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWSCALCULATOR));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_QUICKMATH));
     MSG msg;
 
     // Main message loop:
@@ -96,12 +96,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     return (int) msg.wParam;
 }
 
+LRESULT CALLBACK subParentProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
+	switch (uMsg)
+	{
+	case WM_ACTIVATE:
+		SetFocus(last_focus);
+		break;
+
+	default:
+		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+	}
+}
+
 LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
 	case WM_CHAR:
-		last_focus = hwndTextBox;
 		switch (wParam) {
 		case VK_TAB:
 			return 0;
@@ -169,8 +180,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Droid Serif"));
 
-   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
       CW_USEDEFAULT, 0, 475, 618, nullptr, nullptr, hInstance, nullptr);
+
+   ParentProc = (WNDPROC)SetWindowSubclass(hWnd, &subParentProc, 1, 0);
 
    if (!hWnd) {
       return FALSE;
@@ -225,7 +238,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
    for (int i = 0, index=0; i < 7; i++) {
 
 	   for (int j = 0; j < 5; j++,index++) {
-		   hwndButton[index] = CreateWindowW (
+		   hwndButton[index] = (HWND)CreateWindowW (
 			   L"BUTTON",  // Predefined class; Unicode assumed 
 			   button_chars[index],      // Button text 
 			   WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON ,  // Styles 
@@ -368,9 +381,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			SendMessage(last_focus, EM_REPLACESEL, 0, (LPARAM)button_chars[wmId - ID_BUTTON1]);
 			SetFocus(last_focus);
 		}
-		else if (wmId == IDM_ABOUT) {
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-		}
 		else if (wmId == ID_FILE_EXPORTOPERATIONSTOFILE) {
 			std::wstring str1, str2, str3;
 
@@ -420,42 +430,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
     case WM_PAINT: {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
+            // TODO: probabily to be deleted soon
             EndPaint(hWnd, &ps);
         } break;
+
+	case WM_SYSCOMMAND: {
+		if (wParam == SC_RESTORE) {
+			ShowWindow(hWnd, SW_RESTORE);
+			SetFocus(last_focus);
+		}
+		else {
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+		} break;
         
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
 
-	case WM_CLOSE:
-		DestroyWindow(hWnd);
-		break;
-
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
-}
-
-// Message handler for about box.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-    }
-    return (INT_PTR)FALSE;
 }
 
 
@@ -485,15 +481,16 @@ template <typename T> T Evaluate(char* expression_input, char* variable_values_i
 		token = strtok(variable_values, "  ,");
 
 		while (token != NULL) {
-			char* token_copy = new char[strlen(token) + 1];
-			char* dummy;
-			memset(token_copy, NULL, strlen(token + 1));
+			char* token_copy = new char[strlen(token) + 1]();
+			char* dummy = nullptr;
 			strcpy(token_copy, token);
 			var_name = strtok_s(token_copy, "=", &dummy);
 			var_value = strtok_s(NULL, "=", &dummy);
 
+			if (var_name && var_value) {
 			var_values.push_back(T(atof(var_value)));
 			var_names.push_back(var_name);
+			}
 
 			delete[] token_copy;
 			token = strtok(NULL, " ,");

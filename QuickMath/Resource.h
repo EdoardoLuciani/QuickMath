@@ -1,17 +1,14 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by WindowsCalculator.rc
+// Used by QuickMath.rc
 //
 #define IDC_MYICON                      2
 #define IDD_WINDOWSCALCULATOR_DIALOG    102
 #define IDS_APP_TITLE                   103
-#define IDD_ABOUTBOX                    103
-#define IDM_ABOUT                       104
 #define IDM_EXIT                        105
-#define IDI_WINDOWSCALCULATOR           107
-#define IDC_WINDOWSCALCULATOR           109
+#define IDI_QUICKMATH                   107
+#define IDC_QUICKMATH                   109
 #define IDR_MAINFRAME                   128
-#define ID_HELP_SUPPORTUS               32769
 #define ID_EDIT1                        32770
 #define ID_EDIT2                        32771
 #define ID_DIE                          32772
@@ -22,9 +19,7 @@
 #define ID_BUTTON5                      32777
 #define ID_BUTTON6                      32778
 #define ID_BUTTON7                      32779
-#define ID_FILE_EXPORTOPERATIONSTOFILE  34779
 #define ID_BUTTON8                      32780
-#define ID_FILE_IMPORTOPERATIONSFROMFILE 34780
 #define ID_BUTTON9                      32781
 #define ID_BUTTON10                     32782
 #define ID_BUTTON11                     32783
@@ -52,6 +47,8 @@
 #define ID_BUTTON33                     32805
 #define ID_BUTTON34                     32806
 #define ID_BUTTON35                     32807
+#define ID_FILE_EXPORTOPERATIONSTOFILE  34808
+#define ID_FILE_IMPORTOPERATIONSFROMFILE 34809
 #define ID_EDIT3                        40000
 #define IDC_STATIC                      -1
 
@@ -60,8 +57,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_COMMAND_VALUE         32791
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

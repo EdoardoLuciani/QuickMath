@@ -28,6 +28,7 @@
 #include <locale>
 #include <stdarg.h>
 #include <Commdlg.h>
+#include <commctrl.h>
 
 
 // reference additional headers your program requires here

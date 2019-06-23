@@ -93,4 +93,11 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fs.glsl" />
+    <None Include="shaders\gs.glsl" />
+    <None Include="shaders\tcs.glsl" />
+    <None Include="shaders\tes.glsl" />
+    <None Include="shaders\vs.glsl" />
+  </ItemGroup>
 </Project>
