@@ -74,6 +74,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	RegisterClassExW(&wcex);
 
+	INITCOMMONCONTROLSEX icex;
+
+	// Ensure that the common control DLL is loaded. 
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = 0;
+	InitCommonControlsEx(&icex);
+
     // Perform application initialization:
     if (!InitInstance (hInstance, nCmdShow)) {
         return FALSE;
@@ -160,6 +167,23 @@ LRESULT CALLBACK subEditProc3(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		return CallWindowProc(EditProc3, wnd, msg, wParam, lParam);
 	}
 	return 0;
+}
+
+LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+		
+	PAINTSTRUCT ps;
+	HDC hdc;
+
+	switch (msg) {
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+
+		case IDOK:
+			EndDialog(hwndDlg, wParam);
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
@@ -418,6 +442,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		}
 		else if (wmId == IDM_EXIT) {
 			DestroyWindow(hWnd);
+		}
+		
+		else if (wmId == ID_HELP_SHORT) {
+			CreateDialog(NULL, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, subDialogProc);
 		}
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);

@@ -5,6 +5,7 @@
 #define IDC_MYICON                      2
 #define IDS_APP_TITLE                   103
 #define IDM_EXIT                        105
+#define IDD_PROPPAGE_MEDIUM             106
 #define IDI_QUICKMATH                   107
 #define IDC_QUICKMATH                   109
 #define IDR_MAINFRAME                   128
@@ -45,18 +46,21 @@
 #define ID_BUTTON33                     32804
 #define ID_BUTTON34                     32805
 #define ID_BUTTON35                     32806
-#define ID_FILE_EXPORTOPERATIONSTOFILE  34807
-#define ID_FILE_IMPORTOPERATIONSFROMFILE 34808
+#define ID_FILE_EXPORTOPERATIONSTOFILE  32807
+#define ID_FILE_IMPORTOPERATIONSFROMFILE 32808
+#define ID_HELP_SHORT                   32809
+#define IDD_DIALOG1						32810
 #define ID_EDIT3                        40000
 #define IDC_STATIC                      -1
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "QuickMath.exe.manifest"
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32794
+#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_COMMAND_VALUE         32795
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
