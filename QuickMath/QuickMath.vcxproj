@@ -103,6 +103,7 @@
       <AdditionalDependencies>mpir.lib;mpfr.lib;Winmm.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalManifestDependencies>%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,6 +123,7 @@
       <AdditionalDependencies>mpir.lib;mpfr.lib;Winmm.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalManifestDependencies>%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -144,6 +146,7 @@
       <AdditionalDependencies>mpir.lib;mpfr.lib;Winmm.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalManifestDependencies>%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,12 +169,14 @@
       <AdditionalDependencies>mpir.lib;mpfr.lib;Winmm.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\Edoardo\OneDrive\mpir\lib;C:\Users\Edoardo\OneDrive\mpfr\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalManifestDependencies>%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="exprtk.hpp" />
     <ClInclude Include="exprtk_mpfr_adaptor.hpp" />
     <ClInclude Include="external_functions.hpp" />
+    <ClInclude Include="InitHelpShortcutDialog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -179,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external_functions.cpp" />
+    <ClCompile Include="InitHelpShortcutDialog.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -192,6 +198,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="main_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="QuickMath.exe.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

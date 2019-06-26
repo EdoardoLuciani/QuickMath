@@ -27,7 +27,9 @@ void SaveSSCFile(WCHAR file_type, std::wstring& T1, std::wstring& T2, std::wstri
 	ofn.lpstrDefExt = L"ssc";
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-	GetSaveFileName(&ofn);
+	if (!GetSaveFileName(&ofn)) {
+		return;
+	}
 
 	const std::locale utf8_locale = std::locale(std::locale(), new std::codecvt_utf16<wchar_t>());
 
