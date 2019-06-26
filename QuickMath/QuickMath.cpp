@@ -1,5 +1,8 @@
 // WindowsCalculator.cpp : Defines the entry point for the application.
-//
+
+//todo: add undo function
+//todo: add history
+//todo: add graphical mode
 
 #include "stdafx.h"
 #include "QuickMath.h"
@@ -16,10 +19,10 @@ constexpr int BTT_SPACING_Y = 10;
 constexpr int N_BTT = 36;
 
 WCHAR button_chars[N_BTT][6] = { L"0",L".",L"*10^", L"PLOT",L"EXE",
-							 L"1",L"2",L"3", L"Ans",L"+",
-							 L"4",L"5",L"6", L"pi",L"-",
-							 L"7",L"8",L"9", L"e",L"*",
-							 L"^",L"log10",L"logn",L"x",L"/",
+							 L"1",L"2",L"3", L"+",L"Ans",
+							 L"4",L"5",L"6", L"-",L"pi",
+							 L"7",L"8",L"9", L"*",L"e",
+							 L"^",L"log10",L"logn",L"/",L"x",
 							 L"sqrt",L"cos",L"sin",L"tan",L"=",
 							 L"UNDO",L"(",L")",L"RESET",L"DEL" };
 
@@ -75,19 +78,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	RegisterClassExW(&wcex);
 
-	/*INITCOMMONCONTROLSEX icex;
-	// Ensure that the common control DLL is loaded. 
-	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-	icex.dwICC = 0;
-	InitCommonControls(&icex);*/
-
 	InitCommonControls();
 
     // Perform application initialization:
     if (!InitInstance (hInstance, nCmdShow)) {
         return FALSE;
     }
-
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_QUICKMATH));
     MSG msg;
@@ -183,9 +179,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
 
-   hFontButton = CreateFont(25, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
+   hFontButton = CreateFont(30, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Droid Serif"));
+	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
    hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
       CW_USEDEFAULT, 0, 475, 618, nullptr, nullptr, hInstance, nullptr);
@@ -431,17 +427,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		else if (wmId == ID_HELP_SHORT) {
 			InitHelpShortcutDialog(hWnd,hInst);
 		}
+		else if (wmId == ID_HELP_GOTOQUICKMATH) {
+			ShellExecute(0, 0, L"https://github.com/EdoardoLuciani/QuickMath", 0, 0, SW_SHOW);
+		}
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	} break;
-        
-    case WM_PAINT: {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: probabily to be deleted soon
-            EndPaint(hWnd, &ps);
-        } break;
 
 	case WM_SYSCOMMAND: {
 		if (wParam == SC_RESTORE) {

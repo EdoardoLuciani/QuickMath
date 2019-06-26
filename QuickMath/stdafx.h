@@ -29,6 +29,7 @@
 #include <stdarg.h>
 #include <Commdlg.h>
 #include <commctrl.h>
+#include <shellapi.h>
 
 
 // reference additional headers your program requires here

@@ -4,6 +4,7 @@
 //
 #define IDC_MYICON                      2
 #define IDS_APP_TITLE                   103
+#define IDS_SHORTCUTLIST                104
 #define IDM_EXIT                        105
 #define IDD_PROPPAGE_MEDIUM             106
 #define IDI_QUICKMATH                   107
@@ -50,8 +51,9 @@
 #define ID_FILE_EXPORTOPERATIONSTOFILE  32807
 #define ID_FILE_IMPORTOPERATIONSFROMFILE 32808
 #define ID_HELP_SHORT                   32809
+#define ID_HELP_GOTOQUICKMATH           32810
 #define ID_EDIT3                        40000
-#define ID_DIALOG_EDIT1					40001
+#define ID_DIALOG_EDIT1                 40001
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -60,7 +62,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32795
+#define _APS_NEXT_COMMAND_VALUE         32797
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
