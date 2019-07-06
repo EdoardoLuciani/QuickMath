@@ -8,6 +8,7 @@
 #include "QuickMath.h"
 #include "external_functions.hpp"
 #include "InitHelpShortcutDialog.h"
+#include "InitFileHistoryWindow.h"
 
 #define MAX_LOADSTRING 100
 
@@ -36,16 +37,13 @@ HWND hwndTextBox = NULL;
 HWND hwndTextBox2 = NULL;
 HWND hwndTextBox3 = NULL;
 
-HFONT hFontEdit = NULL;
-HFONT hFontEdit2 = NULL;
-HFONT hFontButton = NULL;
-
 WNDPROC ParentProc;
 WNDPROC EditProc;
 WNDPROC EditProc3;
 
 HWND last_focus;
 
+std::array<std::vector<std::wstring>,3> operations_history;
 
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -75,6 +73,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_QUICKMATH);
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QUICKMATH));
+	//wcex.hbrBackground = (HBRUSH)(CreateSolidBrush(RGB(37, 37, 38)));
 
 	RegisterClassExW(&wcex);
 
@@ -171,15 +170,15 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 
    hInst = hInstance; // Store instance handle in our global variable
 
-   hFontEdit = CreateFont(25, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
+   HFONT hFontEdit = CreateFont(25, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
 
-   hFontEdit2 = CreateFont(22, 0, 0, 0, 300, FALSE, FALSE, FALSE, ANSI_CHARSET,
+   HFONT hFontEdit2 = CreateFont(22, 0, 0, 0, 300, FALSE, FALSE, FALSE, ANSI_CHARSET,
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Consolas"));
 
-   hFontButton = CreateFont(30, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
+   HFONT hFontButton = CreateFont(30, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
@@ -294,6 +293,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			char* A_string = new char[n_chars];
 
 			SendMessage(hwndTextBox, WM_GETTEXT, n_chars, (LPARAM)U_string);
+			operations_history[0].push_back(U_string);
 			wcstombs(A_string, U_string, n_chars);
 			delete[] U_string;
 
@@ -305,6 +305,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				char* A_string_2 = new char[n_chars_2];
 
 				SendMessage(hwndTextBox3, WM_GETTEXT, n_chars_2, (LPARAM)U_string_2);
+				operations_history[2].push_back(U_string_2);
 				wcstombs(A_string_2, U_string_2, n_chars_2);
 				delete[] U_string_2;
 
@@ -313,12 +314,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			}
 			else {
 				result = Evaluate<mpfr::mpreal>(A_string, NULL);
+				operations_history[2].push_back(NULL);
 			}
 
 			delete[] A_string;
 			int result_string_size = strlen(result.toString().c_str()) + 1;
 			WCHAR* final_string = new WCHAR[result_string_size]();
 			MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
+			operations_history[1].push_back(final_string);
 
 			if (wcscmp(final_string,L"nan")) {
 			int str1_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
@@ -429,6 +432,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		}
 		else if (wmId == ID_HELP_GOTOQUICKMATH) {
 			ShellExecute(0, 0, L"https://github.com/EdoardoLuciani/QuickMath", 0, 0, SW_SHOW);
+		}
+		else if (wmId == ID_FILE_HISTORY) {
+			InitFileHistoryWindow(hInst,operations_history);
 		}
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);

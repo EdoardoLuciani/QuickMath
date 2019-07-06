@@ -30,6 +30,7 @@
 #include <Commdlg.h>
 #include <commctrl.h>
 #include <shellapi.h>
+#include <array>
 
 
 // reference additional headers your program requires here
