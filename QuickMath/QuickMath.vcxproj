@@ -176,6 +176,7 @@
     <ClInclude Include="exprtk.hpp" />
     <ClInclude Include="exprtk_mpfr_adaptor.hpp" />
     <ClInclude Include="external_functions.hpp" />
+    <ClInclude Include="external_variables.h" />
     <ClInclude Include="InitFileHistoryWindow.h" />
     <ClInclude Include="InitHelpShortcutDialog.h" />
     <ClInclude Include="Resource.h" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="external_functions.cpp" />
+    <ClCompile Include="external_variables.cpp" />
     <ClCompile Include="InitFileHistoryWindow.cpp" />
     <ClCompile Include="InitHelpShortcutDialog.cpp" />
     <ClCompile Include="stdafx.cpp">

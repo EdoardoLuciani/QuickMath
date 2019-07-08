@@ -6,11 +6,10 @@
 
 #include "stdafx.h"
 #include "QuickMath.h"
+#include "external_variables.h"
 #include "external_functions.hpp"
 #include "InitHelpShortcutDialog.h"
 #include "InitFileHistoryWindow.h"
-
-#define MAX_LOADSTRING 100
 
 constexpr int BUTTON_WIDTH = 80;
 constexpr int BUTTON_HEIGHT = 49;
@@ -27,17 +26,11 @@ WCHAR button_chars[N_BTT][6] = { L"0",L".",L"*10^", L"PLOT",L"EXE",
 							 L"sqrt",L"cos",L"sin",L"tan",L"=",
 							 L"UNDO",L"(",L")",L"RESET",L"DEL" };
 
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-
-HWND hWnd = NULL;
 HWND hwndButton[N_BTT] = { NULL };
 HWND hwndTextBox = NULL;
 HWND hwndTextBox2 = NULL;
 HWND hwndTextBox3 = NULL;
 
-WNDPROC ParentProc;
 WNDPROC EditProc;
 WNDPROC EditProc3;
 
@@ -45,49 +38,28 @@ HWND last_focus;
 
 std::array<std::vector<std::wstring>,3> operations_history;
 
-BOOL                InitInstance(HINSTANCE, int);
+BOOL                InitInstance();
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow) {
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_QUICKMATH, szWindowClass, MAX_LOADSTRING);
-    
-	WNDCLASSEXW wcex;
+	INITCOMMONCONTROLSEX icex;
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = ICC_LISTVIEW_CLASSES;
+	InitCommonControlsEx(&icex);
 
-	wcex.cbSize = sizeof(WNDCLASSEX);
-
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QUICKMATH));
-	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_QUICKMATH);
-	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_QUICKMATH));
-	//wcex.hbrBackground = (HBRUSH)(CreateSolidBrush(RGB(37, 37, 38)));
-
-	RegisterClassExW(&wcex);
-
-	InitCommonControls();
-
+	hInst = hInstance;
     // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow)) {
+    if (!InitInstance() ) {
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_QUICKMATH));
-    MSG msg;
+    HACCEL hAccelTable = LoadAccelerators(hInst, MAKEINTRESOURCE(IDC_QUICKMATH));
 
-    // Main message loop:
+    MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0) > 0)
     {
         if (!TranslateAccelerator(hWnd, hAccelTable, &msg))
@@ -98,17 +70,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     }
 
     return (int) msg.wParam;
-}
-
-LRESULT CALLBACK subParentProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
-	
-	switch (uMsg) {
-	case WM_ACTIVATE:
-		SetFocus(last_focus);
-		break;
-	default:
-		return DefSubclassProc(hWnd, uMsg, wParam, lParam);
-	}
 }
 
 LRESULT CALLBACK subEditProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -166,9 +127,7 @@ LRESULT CALLBACK subEditProc3(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
-
-   hInst = hInstance; // Store instance handle in our global variable
+BOOL InitInstance() {
 
    HFONT hFontEdit = CreateFont(25, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
@@ -182,10 +141,30 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	   OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
 	   DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
-   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
-      CW_USEDEFAULT, 0, 475, 618, nullptr, nullptr, hInstance, nullptr);
+   WCHAR szTitle[100];              
+   WCHAR szWindowClass[100];
+   LoadStringW(hInst, IDS_APP_TITLE, szTitle, 100);
+   LoadStringW(hInst, IDC_QUICKMATH, szWindowClass, 100);
 
-   ParentProc = (WNDPROC)SetWindowSubclass(hWnd, &subParentProc, 1, 0);
+   WNDCLASSEXW wcex;
+   wcex.cbSize = sizeof(WNDCLASSEX);
+   wcex.style = CS_HREDRAW | CS_VREDRAW;
+   wcex.lpfnWndProc = WndProc;
+   wcex.cbClsExtra = 0;
+   wcex.cbWndExtra = 0;
+   wcex.hInstance = hInst;
+   wcex.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_QUICKMATH));
+   wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+   wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+   wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_QUICKMATH);
+   wcex.lpszClassName = szWindowClass;
+   wcex.hIconSm = LoadIcon(hInst, MAKEINTRESOURCE(IDI_QUICKMATH));
+   //wcex.hbrBackground = (HBRUSH)(CreateSolidBrush(RGB(37, 37, 38)));
+
+   RegisterClassExW(&wcex);
+
+   hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
+      CW_USEDEFAULT, 0, 475, 618, nullptr, nullptr, hInst, nullptr);
 
    if (!hWnd) {
       return FALSE;
@@ -201,7 +180,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	   35,        // Button height
 	   hWnd,     // Parent window
 	   (HMENU) ID_EDIT1,       // No menu.
-	   hInstance,
+		hInst,
 	   NULL);      // Pointer not needed.
 
 	EditProc = (WNDPROC)SetWindowLongPtr(hwndTextBox, GWLP_WNDPROC, (LONG_PTR)subEditProc);
@@ -218,7 +197,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	   35,        // Button height
 	   hWnd,     // Parent window
 	   (HMENU)ID_EDIT2,       // No menu.
-	   hInstance,
+		hInst,
 	   NULL);      // Pointer not needed.
 
 	hwndTextBox3 = CreateWindowW(
@@ -231,7 +210,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 		35,        // Button height
 		hWnd,     // Parent window
 		(HMENU)ID_EDIT3,       // No menu.
-		hInstance,
+		hInst,
 		NULL);      // Pointer not needed.
 
 	EditProc3 = (WNDPROC)SetWindowLongPtr(hwndTextBox3, GWLP_WNDPROC, (LONG_PTR)subEditProc3);
@@ -240,7 +219,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
    for (int i = 0, index=0; i < 7; i++) {
 
 	   for (int j = 0; j < 5; j++,index++) {
-		   hwndButton[index] = (HWND)CreateWindowW (
+		   hwndButton[index] = CreateWindowW (
 			   L"BUTTON",  // Predefined class; Unicode assumed 
 			   button_chars[index],      // Button text 
 			   WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON ,  // Styles 
@@ -250,7 +229,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 			   BUTTON_HEIGHT,        // Button height
 			   hWnd,     // Parent window
 			   (HMENU) (ID_BUTTON1 + index),       // No menu.
-			   hInstance,
+			   hInst,
 			   NULL);      // Pointer not needed.
 
 		   SendMessage(hwndButton[index], WM_SETFONT, (WPARAM)hFontButton, TRUE);
@@ -261,7 +240,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
    SendMessage(hwndTextBox2, WM_SETFONT, (WPARAM)hFontEdit2, TRUE);
    SendMessage(hwndTextBox3, WM_SETFONT, (WPARAM)hFontEdit, TRUE);
 
-   ShowWindow(hWnd, nCmdShow);
+   ShowWindow(hWnd, SW_SHOW);
    UpdateWindow(hWnd);
 
    return TRUE;
@@ -305,7 +284,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				char* A_string_2 = new char[n_chars_2];
 
 				SendMessage(hwndTextBox3, WM_GETTEXT, n_chars_2, (LPARAM)U_string_2);
-				operations_history[2].push_back(U_string_2);
+				operations_history[1].push_back(U_string_2);
 				wcstombs(A_string_2, U_string_2, n_chars_2);
 				delete[] U_string_2;
 
@@ -314,14 +293,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			}
 			else {
 				result = Evaluate<mpfr::mpreal>(A_string, NULL);
-				operations_history[2].push_back(NULL);
+				operations_history[1].push_back(0);
 			}
 
 			delete[] A_string;
 			int result_string_size = strlen(result.toString().c_str()) + 1;
 			WCHAR* final_string = new WCHAR[result_string_size]();
 			MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
-			operations_history[1].push_back(final_string);
+			operations_history[2].push_back(final_string);
 
 			if (wcscmp(final_string,L"nan")) {
 			int str1_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
@@ -358,14 +337,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			SendMessage(hwndTextBox3, WM_SETTEXT, 0, (LPARAM)last_value_string.c_str());
 			}
 
-
 			SendMessage(hwndTextBox2, WM_SETTEXT, NULL, (LPARAM)final_string);
 			delete[] final_string;
 
 			SetFocus(last_focus);
 		}
 		else if (wmId == ID_BUTTON31) {
-			//TODO: better UNDO function here
 			SendMessage(hwndTextBox, EM_UNDO, NULL, NULL);
 		}
 		else if (wmId == ID_BUTTON34) {
@@ -428,20 +405,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			DestroyWindow(hWnd);
 		}
 		else if (wmId == ID_HELP_SHORT) {
-			InitHelpShortcutDialog(hWnd,hInst);
+			InitHelpShortcutDialog();
 		}
 		else if (wmId == ID_HELP_GOTOQUICKMATH) {
 			ShellExecute(0, 0, L"https://github.com/EdoardoLuciani/QuickMath", 0, 0, SW_SHOW);
 		}
 		else if (wmId == ID_FILE_HISTORY) {
-			InitFileHistoryWindow(hInst,operations_history);
+			InitFileHistoryWindow(operations_history);
 		}
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	} break;
 
-	case WM_SYSCOMMAND: {
+	case WM_SYSCOMMAND:
 		if (wParam == SC_RESTORE) {
 			ShowWindow(hWnd, SW_RESTORE);
 			SetFocus(last_focus);
@@ -449,7 +426,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-		} break;
+		break;
+
+	case WM_ACTIVATE:
+		SetFocus(last_focus);
+		break;
         
     case WM_DESTROY:
         PostQuitMessage(0);

@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "QuickMath.h"
+#include "external_variables.h"
 #include "InitHelpShortcutDialog.h"
-
-HINSTANCE hInstDlgLoc;
 
 LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
 
@@ -21,7 +20,7 @@ LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 			215,        // Button height
 			hwndDlg,     // Parent window
 			(HMENU)ID_DIALOG_EDIT1,       // No menu.
-			hInstDlgLoc,
+			hInst,
 			NULL);      // Pointer not needed.
 
 		HFONT hFontDlgtextBox = CreateFont(20, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET,
@@ -31,7 +30,7 @@ LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 		SendMessage(hwndDlgTextBox, WM_SETFONT, (WPARAM)hFontDlgtextBox, TRUE);
 
 		WCHAR *shortcuts_explanation = new WCHAR[100];
-		LoadStringW(hInstDlgLoc, IDS_SHORTCUTLIST, shortcuts_explanation, 100);
+		LoadStringW(hInst, IDS_SHORTCUTLIST, shortcuts_explanation, 100);
 		SendMessage(hwndDlgTextBox, WM_SETTEXT, NULL, (LPARAM)shortcuts_explanation);
 		delete[] shortcuts_explanation;
 		return TRUE;
@@ -49,7 +48,6 @@ LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 	return 0;
 }
 
-void InitHelpShortcutDialog(HWND parent_hWnd, HINSTANCE hInstance) {
-	hInstDlgLoc = hInstance;
-	CreateDialog(NULL, MAKEINTRESOURCE(IDD_SHORTCUTHELPDIALOG), parent_hWnd, subDialogProc);
+void InitHelpShortcutDialog() {
+	CreateDialog(NULL, MAKEINTRESOURCE(IDD_SHORTCUTHELPDIALOG), hWnd, subDialogProc);
 }
