@@ -201,6 +201,11 @@
     <ResourceCompile Include="QuickMath.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\Downloads\2x\baseline_restore_black_18dp.png" />
+    <Image Include="baseline_restore_black_18dp.bmp" />
+    <Image Include="baseline_restore_black_18dp.png" />
+    <Image Include="bitmap1.bmp" />
+    <Image Include="bitmap2.bmp" />
     <Image Include="main_icon.ico" />
   </ItemGroup>
   <ItemGroup>

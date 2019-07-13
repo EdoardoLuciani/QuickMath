@@ -249,17 +249,14 @@ BOOL InitInstance() {
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 
-    switch (message) {
-
-	case WM_COMMAND: {
+	if (message == WM_COMMAND) {
 
 		int wmId = LOWORD(wParam);
 
 		if (wmId == ID_BUTTON4) {
 			//TODO: implement graph here
 		}
-
-		if (wmId == ID_BUTTON5) {
+		else if (wmId == ID_BUTTON5) {
 			int n_chars = SendMessage(hwndTextBox, WM_GETTEXTLENGTH, 0, 0) + 1;
 
 			if (!n_chars) {
@@ -302,39 +299,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			MultiByteToWideChar(CP_UTF8, MB_COMPOSITE, result.toString().c_str(), -1, final_string, result_string_size);
 			operations_history[2].push_back(final_string);
 
-			if (wcscmp(final_string,L"nan")) {
-			int str1_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
-			std::wstring last_value_string;
+			if (wcscmp(final_string, L"nan")) {
+				int str1_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
+				std::wstring last_value_string;
 
-			if (str1_l-1) {
-				WCHAR *b_str1 = new WCHAR[str1_l];
-				SendMessage(hwndTextBox3, WM_GETTEXT, str1_l, (LPARAM)b_str1);
-				last_value_string.assign(b_str1);
-				int pos_tr = last_value_string.find(L"ans=", 0);
-				if (pos_tr != std::string::npos) {
-					
-					int pos_te = last_value_string.find(L',', pos_tr + 4);
+				if (str1_l - 1) {
+					WCHAR* b_str1 = new WCHAR[str1_l];
+					SendMessage(hwndTextBox3, WM_GETTEXT, str1_l, (LPARAM)b_str1);
+					last_value_string.assign(b_str1);
+					int pos_tr = last_value_string.find(L"ans=", 0);
+					if (pos_tr != std::string::npos) {
 
-					if (pos_te != std::string::npos) {
-						last_value_string.erase(pos_tr + 4, pos_te-(pos_tr+4));
+						int pos_te = last_value_string.find(L',', pos_tr + 4);
+
+						if (pos_te != std::string::npos) {
+							last_value_string.erase(pos_tr + 4, pos_te - (pos_tr + 4));
+						}
+						else {
+							last_value_string.erase(pos_tr + 4, std::string::npos);
+						}
+
+						last_value_string.insert(pos_tr + 4, final_string);
 					}
 					else {
-						last_value_string.erase(pos_tr + 4, std::string::npos);
+						last_value_string.append(L",ans=");
+						last_value_string.append(final_string);
 					}
-					
-					last_value_string.insert(pos_tr + 4, final_string);
+					delete[] b_str1;
 				}
 				else {
-					last_value_string.append(L",ans=");
+					last_value_string.assign(L"ans=");
 					last_value_string.append(final_string);
 				}
-				delete[] b_str1;
-			}
-			else {
-				last_value_string.assign(L"ans=");
-				last_value_string.append(final_string);
-			}
-			SendMessage(hwndTextBox3, WM_SETTEXT, 0, (LPARAM)last_value_string.c_str());
+				SendMessage(hwndTextBox3, WM_SETTEXT, 0, (LPARAM)last_value_string.c_str());
 			}
 
 			SendMessage(hwndTextBox2, WM_SETTEXT, NULL, (LPARAM)final_string);
@@ -357,7 +354,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			SendMessage(last_focus, EM_REPLACESEL, NULL, (LPARAM)L"");
 			SetFocus(last_focus);
 		}
-		else if ( (wmId >= ID_BUTTON1) && (wmId <= ID_BUTTON33) ) {
+		else if ((wmId >= ID_BUTTON1) && (wmId <= ID_BUTTON33)) {
 			int ndx = GetWindowTextLength(last_focus);
 			SendMessage(last_focus, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
 			SendMessage(last_focus, EM_REPLACESEL, 0, (LPARAM)button_chars[wmId - ID_BUTTON1]);
@@ -370,9 +367,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			int str2_l = SendMessage(hwndTextBox2, WM_GETTEXTLENGTH, 0, 0) + 1;
 			int str3_l = SendMessage(hwndTextBox3, WM_GETTEXTLENGTH, 0, 0) + 1;
 
-			WCHAR *b_str1 = new WCHAR[str1_l];
-			WCHAR *b_str2 = new WCHAR[str2_l];
-			WCHAR *b_str3 = new WCHAR[str3_l];
+			WCHAR* b_str1 = new WCHAR[str1_l];
+			WCHAR* b_str2 = new WCHAR[str2_l];
+			WCHAR* b_str3 = new WCHAR[str3_l];
 
 			SendMessage(hwndTextBox, WM_GETTEXT, str1_l, (LPARAM)b_str1);
 			SendMessage(hwndTextBox2, WM_GETTEXT, str2_l, (LPARAM)b_str2);
@@ -416,9 +413,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-	} break;
+	}
 
-	case WM_SYSCOMMAND:
+	else if (message == WM_RESTORE_CALCULATION) {
+		SendMessage(hwndTextBox, WM_SETTEXT, NULL, (LPARAM)operations_history[0][(int)wParam].c_str());
+		SendMessage(hwndTextBox2, WM_SETTEXT, NULL, (LPARAM)operations_history[2][(int)wParam].c_str());
+		SendMessage(hwndTextBox3, WM_SETTEXT, NULL, (LPARAM)operations_history[1][(int)wParam].c_str());
+	}
+	else if (message == WM_SYSCOMMAND) {
 		if (wParam == SC_RESTORE) {
 			ShowWindow(hWnd, SW_RESTORE);
 			SetFocus(last_focus);
@@ -426,19 +428,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		else {
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-		break;
-
-	case WM_ACTIVATE:
+	}
+	else if (message == WM_ACTIVATE) {
 		SetFocus(last_focus);
-		break;
-        
-    case WM_DESTROY:
+	}    
+	else if (message == WM_DESTROY) {
         PostQuitMessage(0);
-        break;
-
-    default:
+	}
+	else {
         return DefWindowProc(hWnd, message, wParam, lParam);
-    }
+	}
     return 0;
 }
 

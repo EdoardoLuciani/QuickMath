@@ -11,6 +11,7 @@
 #define IDC_QUICKMATH                   108
 #define IDR_MAINFRAME                   109
 #define IDD_SHORTCUTHELPDIALOG          110
+#define IDB_BITMAP1                     111
 #define IDS_FILEHISTORYHEAD1            200
 #define IDS_FILEHISTORYHEAD2            201
 #define IDS_FILEHISTORYHEAD3            202
@@ -58,6 +59,10 @@
 #define ID_HELP_GOTOQUICKMATH           32811
 #define ID_FILE_HISTORY                 32812
 #define ID_DIALOG_EDIT1                 40000
+
+#define ID_DYNAMIC_HISTORY_BUTTONS      60000
+#define ID_MAX_DYNAMIC_HISTORY_BUTTONS  61000
+
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -65,7 +70,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32798
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           110
