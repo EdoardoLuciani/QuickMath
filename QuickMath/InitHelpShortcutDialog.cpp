@@ -16,7 +16,7 @@ LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 			WS_TABSTOP | WS_VISIBLE | WS_CHILD | ES_READONLY | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL,  // Styles 
 			10,         // x position 
 			10,         // y position 
-			450,        // Button width
+			500,        // Button width
 			215,        // Button height
 			hwndDlg,     // Parent window
 			(HMENU)ID_DIALOG_EDIT1,       // No menu.
@@ -29,8 +29,8 @@ LRESULT CALLBACK subDialogProc(HWND hwndDlg, UINT msg, WPARAM wParam, LPARAM lPa
 
 		SendMessage(hwndDlgTextBox, WM_SETFONT, (WPARAM)hFontDlgtextBox, TRUE);
 
-		WCHAR *shortcuts_explanation = new WCHAR[100];
-		LoadStringW(hInst, IDS_SHORTCUTLIST, shortcuts_explanation, 100);
+		WCHAR *shortcuts_explanation = new WCHAR[200];
+		LoadStringW(hInst, IDS_SHORTCUTLIST, shortcuts_explanation, 200);
 		SendMessage(hwndDlgTextBox, WM_SETTEXT, NULL, (LPARAM)shortcuts_explanation);
 		delete[] shortcuts_explanation;
 		return TRUE;
